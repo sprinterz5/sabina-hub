@@ -1,0 +1,70 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		i love you
+	</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="container">
+		<div class="circle">
+			<a href="#hey" class="heart">
+			</a>
+
+			<div class="text">
+				<p>
+					i love you • te amo • ich liebe dich •
+				</p>
+
+			</div>
+
+		</div>
+	</div>
+	
+	<div id="hey" class="hey">
+		You must <br>know that
+	</div>
+	<div id="slider" class="hey">
+		
+	</div>
+	<div class="img">
+		<img src="img/Arrow 3.png">
+	</div>
+	<div id="endline" class="hey">
+		It means i love you.
+	</div>
+
+	<div class="cards">
+		<div id="a" class="card">
+			
+		</div>
+		<div id="b" class="card">
+			
+		</div>
+		<div id="c" class="card">
+			
+		</div>
+		<div id="d" class="card">
+			
+		</div>
+		<div id="e" class="card">
+			
+		</div>
+	</div>
+	<div style="margin-bottom:100px" class="hey">
+		I really do.
+	</div>
+	<script>
+		const text = document.querySelector(".text p");
+		text.innerHTML = text.innerText.split("").map(
+			(char, i) =>
+			`<span style="transform:rotate(${i*9.25}deg)">${char}</span>`).join("")
+
+
+		
+	</script>
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

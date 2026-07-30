@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap');
+body{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background-color: black;
+	color: white;
+	font-size: 16px;
+	font-family: "Source Code Pro";
+	line-height: 40px;
+}
+.background{
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 430px;
+	background-image: linear-gradient( to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0) ), url(../img/footer.png);
+}
+footer{
+	
+	z-index: -1;
+	width: 100%;
+	height: 430px;
+	bottom: 0;
+	background-image: linear-gradient( to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0) ), url(../img/footer.png);
+}
+.screen{
+	height: 100vh;
+	width: 100%;
+	
+}
+@keyframes left-to-right{
+	from{
+		left:-200%;
+	}
+	to{
+		left: 0%;
+	}
+}
+.container{
+	position: absolute;
+	height: 400px;
+	width: 350px;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	animation-name: left-to-right;
+	animation-duration: 4s;
+	animation-iteration-count: 1;
+}
+.envelope{
+	background-color: #d74443;
+	height: 150px;
+	width: 270px;
+	position: relative;
+	left: 40px;
+	top: 160px;
+}
+.paper{
+	background-color:white;
+	height: 150px;
+	width: 250px;
+	position: relative;
+	left: 10px;
+}
+.inner1{
+	width: 0;
+	height: 0;
+	border-bottom: 150px solid #e15349;
+	border-right: 270px solid transparent;
+	position: relative;
+	bottom: 150px;
+}
+.inner2{
+	width: 0;
+	height: 0;
+	border-bottom: 150px solid #e95e55;
+	border-left: 270px solid transparent;
+}
+.cover{
+	width: 0;
+	height: 0;
+	border-top: 75px solid #d74443;
+	border-left: 135px solid transparent;
+	border-right: 135px solid transparent;
+	position: relative;
+	bottom: 300px;
+	transform-origin: top;
+}
+.envelope:hover .cover{
+	transform: rotateX(180deg);
+	z-index: -1;
+}
+.envelope:hover .paper{
+	transform: translateY(-50px);
+}
+.space{
+	margin-bottom: 50px;
+}
+.main{
+	padding-top: 70px;
+	font-size: 36px;
+	line-height: 150px;
+	margin-bottom: 50px;
+}
+img{
+	margin-bottom: 50px;
+}

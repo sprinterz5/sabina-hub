@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap');
+body{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background-color: black;
+	color: white;
+	font-size: 16px;
+	font-family: "Source Code Pro";
+	line-height: 40px;
+}
+
+footer{
+	
+	z-index: -1;
+	width: 100%;
+	height: 430px;
+	bottom: 0;
+	background-image: linear-gradient( to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0) ), url(../img/footer.png);
+}
+.container{
+
+	background-image: linear-gradient( to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0) ), url(../img/starfall.gif);
+	background-size: cover;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	height: 100vh;
+}
+.laptop{
+	position: relative;
+	width: 100%;
+	max-width: 1200px;
+}
+.laptop img{
+	width: 100%;
+}
+video{
+	width: 70.7%;
+	position: absolute;
+	height: 71.3%;
+	top: 12%;
+	left: 13.5%;
+	object-fit: cover;
+}
+.text{
+	font-size: 24px;
+	text-align: center;
+}

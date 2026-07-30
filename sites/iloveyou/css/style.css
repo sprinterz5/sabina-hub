@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&family=Satisfy&display=swap');
+body{
+	margin: 0;
+	background-color: #111111;
+	color: white;
+	font-family: Raleway;
+	font-size: 64px;
+
+}
+.container{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#slider{
+	
+	line-height: 100px;
+	padding: 0 50px;
+}
+#text0{
+	margin-bottom: 50px;
+}
+#afterbody{
+	font-size: 16px;
+	overflow-wrap: break-word;
+}

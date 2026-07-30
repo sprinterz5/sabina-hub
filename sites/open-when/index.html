@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Открой, когда тебе…</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e1a;
+    --ink: #e8e6f0;
+    --muted: #8b8aa3;
+    --line: #2a2f52;
+    --accent: #e0b1cb;
+    --gold: #d4af6a;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Jost', 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: radial-gradient(ellipse at 50% 0%, #1a1f3d 0%, var(--bg) 55%, #150f28 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    padding: 70px 24px 20px;
+  }
+  header .date {
+    letter-spacing: .5em; text-transform: uppercase;
+    font-size: 11.5px; color: var(--gold); margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(36px, 7vw, 68px); line-height: 1.08;
+  }
+  header h1 em { font-style: italic; color: var(--accent); }
+  header .sub {
+    margin: 22px auto 0; max-width: 470px;
+    color: var(--muted); font-size: 15px; line-height: 1.65;
+  }
+  header .count {
+    margin-top: 26px; font-family: var(--serif);
+    font-size: 19px; color: var(--muted); font-style: italic;
+  }
+  header .count b { color: var(--ink); font-style: normal; font-variant-numeric: tabular-nums; }
+
+  .grid {
+    max-width: 940px; margin: 0 auto;
+    padding: 46px 24px 100px;
+    display: grid; gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+  .env {
+    position: relative;
+    border: 1px solid var(--line); border-radius: 14px;
+    background: linear-gradient(160deg, rgba(25,30,60,.7), rgba(16,19,38,.7));
+    padding: 26px 22px 24px;
+    cursor: pointer; text-align: left;
+    font-family: inherit; color: inherit;
+    transition: border-color .35s, transform .35s, background .35s;
+    min-height: 150px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    overflow: hidden;
+  }
+  .env::after {
+    content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 46px;
+    background: linear-gradient(180deg, rgba(224,177,203,.07), transparent);
+    border-bottom: 1px solid rgba(42,47,82,.7);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    pointer-events: none;
+  }
+  .env:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    background: linear-gradient(160deg, rgba(40,30,58,.8), rgba(18,21,42,.8));
+  }
+  .env .pre {
+    font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .env .t {
+    font-family: var(--serif); font-size: 27px; font-weight: 500;
+    line-height: 1.2; margin-bottom: 14px;
+  }
+  .env .seal {
+    align-self: flex-start;
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--gold); opacity: .75;
+  }
+  .env.read { border-style: dashed; }
+  .env.read .seal { color: var(--muted); opacity: .55; }
+
+  .letter {
+    position: fixed; inset: 0; z-index: 20;
+    background: rgba(6,8,18,.93);
+    backdrop-filter: blur(10px);
+    display: none; align-items: flex-start; justify-content: center;
+    overflow-y: auto; padding: 40px 20px 70px;
+  }
+  .letter.show { display: flex; }
+  .sheet {
+    max-width: 580px; width: 100%;
+    background: linear-gradient(170deg, #171b34, #12152a);
+    border: 1px solid var(--line); border-radius: 18px;
+    padding: clamp(30px, 5vw, 52px);
+    animation: rise .5s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px); } }
+  .sheet .pre {
+    font-size: 11px; letter-spacing: .32em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .sheet h2 {
+    font-family: var(--serif); font-weight: 500; font-style: italic;
+    font-size: clamp(29px, 5.5vw, 42px); line-height: 1.15;
+    color: var(--accent); margin-bottom: 26px;
+  }
+  .sheet .body p {
+    font-family: var(--serif); font-size: 20.5px; line-height: 1.62;
+    margin-bottom: 17px; color: #ddd9e8;
+  }
+  .sheet .body p.small {
+    font-family: var(--sans); font-size: 14.5px; line-height: 1.7;
+    color: var(--muted);
+  }
+  .sheet .body em { color: var(--accent); font-style: italic; }
+  .sheet .body .live {
+    display: block; text-align: center;
+    font-family: var(--serif); font-size: 30px; color: var(--ink);
+    margin: 24px 0; font-variant-numeric: tabular-nums;
+  }
+
+  /* ── фото в письме ── */
+  .photo {
+    margin: 26px auto 24px;
+    max-width: 330px;
+    background: #f4f1ea;
+    padding: 12px 12px 0;
+    border-radius: 3px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.5);
+    transform: rotate(-1.6deg);
+  }
+  .photo:nth-of-type(even) { transform: rotate(1.4deg); }
+  .photo img {
+    display: block; width: 100%; height: auto;
+    max-height: 400px; object-fit: contain;
+    background: #ddd8cf;
+  }
+  .photo figcaption {
+    font-family: var(--serif); font-style: italic;
+    font-size: 15.5px; color: #55506a;
+    text-align: center; padding: 11px 6px 13px;
+  }
+
+  /* ── контактный лист в последнем конверте ── */
+  .sheetstrip {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    justify-content: center; margin: 26px 0 8px;
+  }
+  .sheetstrip img {
+    width: 62px; height: 62px; object-fit: cover;
+    border-radius: 5px; opacity: .78;
+    transition: opacity .3s, transform .3s;
+  }
+  .sheetstrip img:hover { opacity: 1; transform: scale(1.12); }
+
+  .sheet .sign {
+    margin-top: 30px; padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .sheet .sign span {
+    font-family: var(--serif); font-style: italic;
+    font-size: 19px; color: var(--muted);
+  }
+  .sheet .sign button {
+    background: none; border: 1px solid var(--line); border-radius: 9px;
+    color: var(--ink); font-family: var(--sans); font-size: 12.5px;
+    letter-spacing: .12em; padding: 9px 16px; cursor: pointer;
+    transition: border-color .25s, color .25s;
+  }
+  .sheet .sign button:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer { text-align: center; padding: 0 24px 80px; }
+  footer p {
+    font-family: var(--serif); font-style: italic;
+    font-size: 21px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="date">31 · 07 · 2026</div>
+  <h1>Открой, <em>когда тебе…</em></h1>
+  <p class="sub">Двенадцать конвертов. Не читай все сразу — они не для этого. Открывай тот, который сегодня про тебя.</p>
+  <div class="count" id="hcount"></div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<footer><p>Три года. И ни одного дня, о котором я жалею.</p></footer>
+
+<div class="letter" id="letter">
+  <div class="sheet">
+    <div class="pre">открой, когда тебе</div>
+    <h2 id="lt"></h2>
+    <div class="body" id="lb"></div>
+    <div class="sign">
+      <span>— твой Айдар</span>
+      <button id="lclose">закрыть конверт</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const T0 = new Date(2023, 6, 31, 21, 51, 0);
+const daysTogether = () => Math.floor((Date.now() - T0.getTime()) / 86400000);
+
+/* фотки лежат в общей папке хаба, чтобы их можно было переиспользовать */
+const P = n => `../../imgs/photo_${n}_2026-07-30_18-03-28.jpg`;
+// без loading="lazy": картинки вставляются в скрытый .letter, а лениво
+// загружаемые изображения в display:none так и не начинают грузиться.
+// Ленивость тут и не нужна — фото тянется только когда конверт открыли.
+const pic = (n, cap) =>
+  `<figure class="photo"><img src="${P(n)}" alt=""><figcaption>${cap}</figcaption></figure>`;
+
+const CARDS = [
+  {
+    k: 'sad', pre: 'конверт первый', t: 'грустно',
+    body: `<p>Я знаю это твоё лицо. Ты говоришь «да нормально всё» и уходишь в телефон.</p>
+<p>Слушай. Тебе не обязательно быть в порядке прямо сейчас. Правда не обязательно, и это не делает тебя слабой.</p>
+${pic(4, 'ты смеёшься, я корчу рожу. обычный вечер.')}
+<p>Помнишь, я как-то писал, что чем честнее я с тобой, тем живее твой ответ? Это работает и в обратную сторону. Напиши мне как есть — без «всё хорошо». Я не сломаюсь, я проверял.</p>
+<p>А если писать не хочется — просто посиди здесь. Я никуда не денусь. Я тут уже <em class="dd"></em> дней.</p>`
+  },
+  {
+    k: 'anxious', pre: 'конверт второй', t: 'тревожно',
+    body: `<p>Сначала подыши. Серьёзно, до того как читать дальше: вдох на четыре, задержи на семь, выдох на восемь. Три раза. Я подожду.</p>
+${pic(6, 'вот так. просто побудь тут минуту.')}
+<p>Теперь так. То, чего ты боишься, с большой вероятностью не случится. А если случится — ты уже проходила через вещи пострашнее, и я это видел своими глазами.</p>
+<p>Я видел тебя в моменты, когда ты сама себе казалась слабой. Ты не была слабой. Ты была уставшей. Это разные вещи, и их очень легко перепутать изнутри.</p>`
+  },
+  {
+    k: 'lonely', pre: 'конверт третий', t: 'одиноко',
+    body: `<p>Одиноко и «одна» — это не одно и то же. Можно сидеть в комнате, полной людей, и всё равно чувствовать вот это.</p>
+${pic(2, 'дискорд, опять полночь, опять ты')}
+<p>Поэтому не жди «удобного момента», чтобы написать. Удобного момента не бывает — я за три года не нашёл ни одного.</p>
+<p>Помнишь наши самые первые разговоры? Как это было странно и хорошо одновременно. Ничего с тех пор не изменилось. Просто напиши мне, прямо сейчас.</p>`
+  },
+  {
+    k: 'failing', pre: 'конверт четвёртый', t: 'кажется, что ты не справляешься',
+    body: `<p>Ты справлялась со мной три года. Это, между прочим, красный диплом.</p>
+${pic(3, 'лифт, зима, мы')}
+<p>Я был зол на себя и на весь мир. Я думал, что дальше пути нет. Я делал тебе больно — и не один раз. А ты не ушла: слушала, где-то уступала, где-то помогала, шутила и смеялась.</p>
+<p>Человек, который сумел вот это, справится с чем угодно из того, что тебя сейчас пугает. Я говорю это не чтобы утешить — у меня есть доказательство, и это доказательство я.</p>`
+  },
+  {
+    k: 'angry', pre: 'конверт пятый', t: 'ты злишься на меня',
+    body: `<p>Окей. Скорее всего, я это заслужил.</p>
+<p>Не буду оправдываться и объяснять, что я <em>на самом деле имел в виду</em> — терпеть не могу, когда так делают.</p>
+${pic(1, 'считай, что это я извиняюсь')}
+<p>Скажи мне прямо, что я сделал. Резко, если надо. Злись столько, сколько нужно, но не молча — молчание единственное, чего я в нас по-настоящему боюсь.</p>
+<p>Я лучше выслушаю самое худшее, чем буду сидеть и догадываться.</p>`
+  },
+  {
+    k: 'sleepless', pre: 'конверт шестой', t: 'не спится',
+    body: `<p>Три часа ночи, да? Знакомо.</p>
+<p>Ложись на бок. Телефон убери — не сейчас, через минуту, дочитай сначала.</p>
+${pic(7, 'ты уснула. я не двигался, чтобы не разбудить.')}
+<p>Я в такие ночи думаю про всякую ерунду: про кривые картинки, которые лепил тебе в Figma, про зимний адвент, про то, что до сих пор ношу вещи, которые ты мне тогда подарила.</p>
+<p>Всё, минута прошла. Клади телефон и закрывай глаза. Я тут.</p>`
+  },
+  {
+    k: 'laugh', pre: 'конверт седьмой', t: 'хочется посмеяться',
+    body: `<p>Напоминаю несколько фактов о человеке, которого ты выбрала.</p>
+<p>Я сделал сайт с надписью «Сабина я тебя съем иди спать». Он до сих пор лежит в интернете. Навсегда.</p>
+<p>Я написал целую игру на JavaScript, чтобы сказать то, что мог сказать словами за минуту.</p>
+${pic(9, 'примерно так это и было')}
+<p>Я сделал <em>девятнадцать</em> сайтов вместо того, чтобы один раз нормально поговорить.</p>
+<p>А первая годовщина? Как неловко-то вышло.</p>
+<p>Вот такое ты выбрала. Возврату и обмену не подлежит.</p>`
+  },
+  {
+    k: 'ugly', pre: 'конверт восьмой', t: 'кажется, что ты некрасивая',
+    body: `<p>Я видел тебя утром. Без всего, с этим твоим лицом «не смотри на меня».</p>
+<p>Смотрел. Так и не понял, в чём была проблема.</p>
+${pic(8, 'крылья пририсованы. всё остальное — нет.')}
+<p>Я уже писал однажды, что твоя улыбка источает свет, и мне до сих пор не стыдно за эту фразу, хотя звучит она как из плохого стихотворения. Я не поэт, я не знаю, как сказать иначе.</p>
+<p>Зеркало показывает тебе пиксели одного утра. Я смотрю на тебя <em class="dd"></em> дней подряд.</p>`
+  },
+  {
+    k: 'done', pre: 'конверт девятый', t: 'всё надоело',
+    body: `<p>Тогда бросай. Серьёзно.</p>
+<p>Не всё, конечно. Но то, что можно отложить на сегодня — отложи на сегодня. Учёба подождёт один вечер, мир не рухнет, я проверял неоднократно.</p>
+${pic(5, 'видишь? мир не рухнул. все просто поели.')}
+<p>Ты поменяла мои цели, принципы и приоритеты, заставила усомниться во всём, что я знал до тебя — а себе почему-то не разрешаешь просто остановиться на вечер.</p>
+<p>Значит, разрешу за тебя. Считай, что официально.</p>`
+  },
+  {
+    k: 'miss', pre: 'конверт десятый', t: 'скучаешь',
+    body: `<p>Я тоже. Всегда сильнее, чем показываю.</p>
+<span class="live" id="liveDays"></span>
+${pic(10, 'даже тень у нас общая')}
+<p>Знаешь, что самое смешное? Раньше, когда меня спрашивали, чего я улыбаюсь в экран, я что-то придумывал.</p>
+<p>Теперь просто говорю, что переписываюсь с тобой.</p>`
+  },
+  {
+    k: 'begin', pre: 'конверт одиннадцатый', t: 'хочется вспомнить, как всё начиналось',
+    body: `<p><em>31 июля 2023, 21:51.</em></p>
+<p>Я до сих пор считаю, что «июль вчера был». Не знаю, как это работает, но три года ощущаются как одно длинное лето.</p>
+${pic(11, 'я до сих пор храню это')}
+<p>Закрой этот конверт и вернись на главную — там лежит вся лента: каждый сайт, который я делал для тебя с того самого дня.</p>
+<p>Некоторые из них, честно говоря, ужасные. Мне ни капли не стыдно.</p>`
+  },
+  {
+    k: 'nothing', pre: 'конверт двенадцатый', t: 'просто так',
+    body: `<p>Ничего не случилось? Отлично. Это лучший из поводов.</p>
+<p>Тогда просто: я тебя люблю. Не по случаю, не в ответ на что-то, не потому что дата на календаре.</p>
+<div class="sheetstrip">${[1,2,3,4,5,6,7,8,9,10,11].map(n => `<img src="${P(n)}" alt="">`).join('')}</div>
+<p>Я как-то написал, что это не я герой в твоей истории — это ты пришла спасать меня. С тех пор не изменилось ровным счётом ничего.</p>
+<p>Спасибо, что ты здесь. Все <em class="dd"></em> дней.</p>`
+  },
+];
+
+let seen = {};
+try { seen = JSON.parse(localStorage.getItem('openwhen') || '{}'); } catch (e) {}
+function markSeen(k) {
+  seen[k] = 1;
+  try { localStorage.setItem('openwhen', JSON.stringify(seen)); } catch (e) {}
+}
+
+const grid = document.getElementById('grid');
+grid.innerHTML = CARDS.map((c, i) => `
+  <button class="env${seen[c.k] ? ' read' : ''}" data-i="${i}">
+    <div>
+      <div class="pre">${c.pre}</div>
+      <div class="t">${c.t}</div>
+    </div>
+    <div class="seal">${seen[c.k] ? 'уже открыт' : 'запечатан'}</div>
+  </button>`).join('');
+
+document.getElementById('hcount').innerHTML =
+  `сегодня мы вместе <b>${daysTogether()}</b> дней`;
+
+const letter = document.getElementById('letter');
+const lt = document.getElementById('lt');
+const lb = document.getElementById('lb');
+let liveTimer = null;
+
+function openLetter(i) {
+  const c = CARDS[i];
+  lt.textContent = c.t;
+  lb.innerHTML = c.body;
+  lb.querySelectorAll('.dd').forEach(el => { el.textContent = daysTogether(); });
+  const live = lb.querySelector('#liveDays');
+  if (live) {
+    const tickLive = () => {
+      const s = Math.floor((Date.now() - T0.getTime()) / 1000);
+      live.textContent = `${Math.floor(s / 86400)} дней ${Math.floor(s / 3600) % 24} часов ${Math.floor(s / 60) % 60} минут`;
+    };
+    tickLive();
+    liveTimer = setInterval(tickLive, 1000);
+  }
+  letter.classList.add('show');
+  letter.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  markSeen(c.k);
+  const btn = grid.querySelector(`[data-i="${i}"]`);
+  btn.classList.add('read');
+  btn.querySelector('.seal').textContent = 'уже открыт';
+}
+function closeLetter() {
+  letter.classList.remove('show');
+  document.body.style.overflow = '';
+  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+}
+
+grid.addEventListener('click', e => {
+  const b = e.target.closest('.env');
+  if (b) openLetter(+b.dataset.i);
+});
+document.getElementById('lclose').addEventListener('click', closeLetter);
+letter.addEventListener('click', e => { if (e.target === letter) closeLetter(); });
+
+// Escape закрывает письмо. Пока письмо открыто — гасим событие,
+// чтобы оболочка хаба не закрыла заодно и весь сайт
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && letter.classList.contains('show')) {
+    e.stopImmediatePropagation();
+    closeLetter();
+  }
+});
+</script>
+</body>
+</html>

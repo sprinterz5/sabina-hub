@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap');
+
+body {
+margin:0;
+padding:0;
+background-color:black;
+	
+	
+}
+.container{
+
+	background-image: linear-gradient( to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0) ), url(../img/starfall.gif);
+	background-size: cover;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	min-height:100%;
+}
+.circle{
+position:relative;
+width:200px;
+height:200px;
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items: center;
+
+}
+
+.heart{
+	z-index: 2;
+margin-left:45px;
+position:absolute;
+height:160px;
+width:100px;
+background: #d16ba5;
+border-radius:200px 200px 0 0;
+
+animation: huging 1s alternate infinite; 
+}
+.heart::before{
+content:"";
+position:absolute;
+background:#d16ba5;
+height:160px;
+width:100px;
+transform: rotate(-90deg);
+border-radius:200px 200px 0 0;
+left:-30px;
+top:30px;
+}
+
+@keyframes huging{
+	0%{
+		transform: scale(1) rotate(45deg);
+	}
+	100%{
+		transform: scale(0.85) rotate(45deg);
+	}
+}
+
+.text{
+position:absolute;
+width:100%;
+height:100%;
+color:white;
+	animation: rotateText 20s linear infinite;
+}
+@keyframes rotateText{
+0%{
+transform:rotate(360deg);
+}
+100%{
+transform:rotate(0deg);
+}
+}
+.text span{
+top:-15%;
+position:absolute;
+left:50%;
+font-size:1.2em;
+transform-origin:0 130px;
+}
+#hey{
+	margin-top: 100px;
+
+}
+.hey{
+	padding: 0 30px;
+	font-family: Manrope;
+	
+	font-size: 48px;
+	color: white;
+}
+#slider{
+ height: 200px;
+	margin-bottom: 40px;
+
+}
+.img{
+	text-align: center;
+	margin-bottom: 40px;
+}
+#endline{
+	margin-bottom: 50px;
+}
+
+.cards{
+	width: 100%;
+	height: 250px;
+	margin-top: 100px;
+	margin-bottom: 100px;
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+.card{
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	border-radius: 35px;
+	background-color: #ccc;
+	height: 250px;
+	width: 250px;
+	font-size: 24px;
+	color: white;
+
+	transition: transform 200ms;
+	box-shadow: 0px -10px #00000040;
+}
+#a{
+	background-image: url("../img/card1.png");
+	background-size: cover;
+}
+#b{
+	background-image: url("../img/card2.png");
+	background-size: cover;
+}
+#c{
+	background-image: url("../img/card3.png");
+	background-size: cover;
+}
+#d{
+	background-image: url("../img/card4.png");
+	background-size: cover;
+}
+#e{
+	background-image: url("../img/card5.png");
+	background-size: cover;
+}
+.card:nth-last-child(1){
+	--y: calc(-50% + 15px);
+	transform: translate(-50%, var(--y)) scale(1.05);
+
+}
+.card:nth-last-child(2){
+	--y: calc(-50%);
+	transform: translate(-50%, var(--y)) scale(1);
+	
+}
+.card:nth-last-child(3){
+	--y: calc(-50% - 15px);
+	transform: translate(-50%, var(--y)) scale(0.95);
+	
+}
+.card:nth-last-child(4){
+	--y: calc(-50% - 30px);
+	transform: translate(-50%, var(--y)) scale(0.9);
+	
+}
+.card:nth-last-child(5){
+	--y: calc(-50% - 45px);
+	transform: translate(-50%, var(--y)) scale(0.85);
+	
+}
+
+@keyframes swap{
+	50%{
+		transform: translate(-50%, calc(var(--y) - 250px)) scale(0.85) rotate(-5deg);
+		animation-timing-function: ease-in;
+	}
+	100%{
+		transform: translate(-50%, calc(var(--y) - 15px)) scale(0.85);
+		z-index: -1;
+	}
+}

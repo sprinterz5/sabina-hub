@@ -1,0 +1,37 @@
+body {
+margin:0;
+padding:0;
+background-color:black;
+	background-image:url("../img/starfall.gif");
+	background-size:cover;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	min-height:100%;
+}
+
+.heart{
+margin-left:45px;
+position:absolute;
+height:160px;
+width:100px;
+background: #d16ba5;
+border-radius:200px 200px 0 0;
+transform: rotate(45deg);
+}
+.heart::before{
+content:"";
+position:absolute;
+background:#d16ba5;
+height:160px;
+width:100px;
+transform:rotate(-90deg);
+border-radius:200px 200px 0 0;
+left:-30px;
+top:30px;
+}
+
+.text{
+color:white;
+}

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap');
+body{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	background-color: black;
+	color: white;
+	font-size: 32px;
+	font-family: "Source Code Pro";
+	line-height: 40px;
+}
+.background{
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 430px;
+	background-image: linear-gradient( to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0) ), url(../img/footer.png);
+}
+footer{
+	position: absolute;
+
+	z-index: -1;
+	width: 100%;
+	height: 430px;
+	bottom: 0;
+	background-image: linear-gradient( to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7), rgba(255, 255, 255, 0) ), url(../img/footer.png);
+}
+.container{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+.contain{
+	position: relative;
+}
+img.img{
+	width: 300px;
+
+}
+.text{
+	
+}
+img.arrow{
+	transform: rotate(180deg);
+	margin-top: 50px;
+	margin-bottom: 20px;
+}
+.hover{
+	display: none;
+	top: 0;
+	position: absolute;
+	width: 300px;
+	height: 37px;
+	background-color: rgba(0, 0, 0, 0.85);
+}

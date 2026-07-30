@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Slideshow</title>
+    <style>
+        /* General styles */
+        body {
+            margin: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1, h3, p {
+            margin: 10px;
+        }
+
+        /* Intro section */
+        #intro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #ff4242;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 66, 66, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff2424;
+            box-shadow: 0 8px 20px rgba(255, 36, 36, 0.6);
+        }
+
+        /* Slideshow images */
+        .slideshow-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: auto;
+            max-width: 100%;
+            height: 80%;
+            object-fit: contain;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0.7;
+        }
+
+        /* Statistics section */
+        #summary {
+            margin-top: 30px;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        #summary h1 {
+            font-size: 2.5rem;
+            color: gold;
+            text-shadow: 0 2px 8px rgba(255, 223, 0, 0.8);
+        }
+
+        #summary h3 {
+            color: #ff9999;
+            text-shadow: 0 2px 5px rgba(255, 153, 153, 0.8);
+        }
+
+        #summary p {
+            color: lightblue;
+            font-size: 1.2rem;
+        }
+
+        /* Gallery section */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery-img {
+            flex: 1 1 calc(33.33% - 10px); /* Default: 3 images per row */
+            max-width: calc(33.33% - 10px);
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Falling decorations */
+        .falling {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(-50vw + 100px)) translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .gallery-img {
+                flex: 1 1 calc(25% - 10px); /* 4 images per row for larger screens */
+                max-width: calc(25% - 10px);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .gallery-img {
+                flex: 1 1 calc(20% - 10px); /* 5 images per row for extra-large screens */
+                max-width: calc(20% - 10px);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>🎄 Our 2024 Wrapped 🎁</h1>
+        <h3>Jump in to our year of joy and memories ✨</h3>
+        <button onclick="startSlideshow()">Let's go!</button>
+    </div>
+
+    <script>
+        const photos = [];
+        for (let i = 103; i <= 443; i++) {
+            photos.push(`photo/${i}.jpg`);
+        }
+
+        let currentIndex = 0;
+        const slideshowImages = [];
+
+        function createImageElement(src, className) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = className;
+            return img;
+        }
+
+        function createFallingEffect() {
+            const numComets = 50;
+            for (let i = 0; i < numComets; i++) {
+                const comet = document.createElement('div');
+                comet.className = 'falling';
+                comet.style.left = Math.random() * 100 + 'vw';
+                comet.style.animationDuration = 2 + Math.random() * 4 + 's';
+                comet.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+                document.body.appendChild(comet);
+                setTimeout(() => comet.remove(), 5000);
+            }
+        }
+
+        function startSlideshow() {
+            document.getElementById('intro').style.display = 'none';
+
+            setInterval(createFallingEffect, 1000);
+
+            const interval = setInterval(() => {
+                const nextImg = createImageElement(photos[currentIndex % photos.length], 'slideshow-img');
+                document.body.appendChild(nextImg);
+                setTimeout(() => nextImg.style.opacity = 1, 50);
+
+                slideshowImages.push(nextImg);
+                if (slideshowImages.length > 3) {
+                    const oldImg = slideshowImages.shift();
+                    oldImg.style.opacity = 0;
+                    setTimeout(() => document.body.removeChild(oldImg), 300);
+                }
+
+                currentIndex++;
+                if (currentIndex >= photos.length) {
+                    clearInterval(interval);
+                    showSummary();
+                }
+            }, 50);
+        }
+
+        function showSummary() {
+            const endDate = new Date('2024-12-31');
+            const startDate = new Date('2023-07-31');
+            const daysTogether = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const newYearsCount = 2;
+            const medianCallTime = "2h 23 min";
+
+            document.body.innerHTML = `
+                <div id="summary">
+                    <h1>🎉 ${daysTogether} Days Together 🎉</h1>
+                    <h3>🥂 ${newYearsCount} New Years Celebrated 🥂</h3>
+                    <p>📞 Median Call Time: ${medianCallTime}</p>
+                </div>
+                <div class="gallery"></div>
+            `;
+
+            // Display all images in a responsive grid
+            const gallery = document.querySelector('.gallery');
+            photos.forEach((photo) => {
+                const img = createImageElement(photo, 'gallery-img');
+                gallery.appendChild(img);
+            });
+        }
+    </script>
+</body>
+</html>

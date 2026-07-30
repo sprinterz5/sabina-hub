@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+i love you
+</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="text" class="text">
+
+</div>
+<div id="text1" class="text">
+</div>
+
+<script>
+let i=0;
+let text="Ты очень красивая."
+let text1="Я не устану повторять это."
+let newString = 0;
+function typeWriter(text, para){
+if(newString==2){
+clearInterval(typeInterval);
+}
+if(i<text.length){
+document.getElementById(para).innerHTML += text.charAt(i);
+i++;
+}
+else{
+if(newString == 0){
+i=0;
+}
+newString+=1;
+
+}
+}
+var typeInterval;
+typeInterval = setInterval(function(){
+if(newString ==0){
+typeWriter(text, "text");
+}
+
+if(newString==1){
+typeWriter(text1,"text1");
+}
+}, 100);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Наша история</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e1a;
+    --bg2: #131730;
+    --ink: #e8e6f0;
+    --muted: #8b8aa3;
+    --line: #2a2f52;
+    --accent: #e0b1cb;
+    --gold: #d4af6a;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Jost', 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 60%, #1a1230 100%);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ── burger ── */
+  .burger {
+    position: fixed; top: 20px; left: 20px; z-index: 60;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: rgba(19,23,48,.75); backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    cursor: pointer; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 5px;
+    transition: border-color .3s;
+  }
+  .burger:hover { border-color: var(--accent); }
+  .burger span {
+    display: block; width: 18px; height: 1.5px;
+    background: var(--ink); transition: transform .35s, opacity .35s;
+  }
+  .burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ── drawer ── */
+  .drawer {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+    width: min(340px, 88vw);
+    background: rgba(11,14,26,.92); backdrop-filter: blur(14px);
+    border-right: 1px solid var(--line);
+    transform: translateX(-100%);
+    transition: transform .45s cubic-bezier(.22,1,.36,1);
+    overflow-y: auto;
+    padding: 90px 28px 40px;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer h3 {
+    font-family: var(--serif); font-weight: 500; font-size: 15px;
+    letter-spacing: .25em; color: var(--gold);
+    margin: 26px 0 10px; text-transform: uppercase;
+  }
+  .drawer h3:first-child { margin-top: 0; }
+  .drawer a {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px; padding: 8px 2px;
+    color: var(--ink); text-decoration: none; font-size: 15px;
+    border-bottom: 1px solid transparent;
+    transition: color .25s, padding-left .25s;
+  }
+  .drawer a:hover { color: var(--accent); padding-left: 8px; }
+  .drawer a .d { color: var(--muted); font-size: 12.5px; flex-shrink: 0; }
+  .scrim {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(0,0,0,.45);
+    opacity: 0; pointer-events: none; transition: opacity .4s;
+  }
+  .scrim.show { opacity: 1; pointer-events: auto; }
+
+  /* ── hero ── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 92vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 40px 24px;
+  }
+  .hero .pre {
+    letter-spacing: .5em; text-transform: uppercase;
+    font-size: 12px; color: var(--muted); margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(42px, 8vw, 84px);
+    line-height: 1.05; margin-bottom: 30px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .counter {
+    display: flex; gap: clamp(14px, 4vw, 38px);
+    justify-content: center; flex-wrap: wrap;
+  }
+  .counter .cell { min-width: 64px; }
+  .counter .n {
+    font-family: var(--serif); font-size: clamp(30px, 5vw, 52px);
+    font-weight: 500; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .counter .l {
+    font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--muted); margin-top: 2px;
+  }
+  .hero .since { margin-top: 26px; color: var(--muted); font-size: 14px; }
+  .hero .down {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    color: var(--muted); font-size: 22px; text-decoration: none;
+    animation: bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translate(-50%,0);} 50% { transform: translate(-50%,8px);} }
+
+  /* ── timeline ── */
+  .timeline {
+    position: relative; z-index: 1;
+    max-width: 680px; margin: 0 auto; padding: 40px 24px 120px;
+  }
+  .year {
+    font-family: var(--serif); font-size: clamp(34px, 6vw, 54px);
+    font-weight: 500; color: var(--gold);
+    margin: 70px 0 10px; text-align: center;
+    letter-spacing: .08em;
+  }
+  .year:first-child { margin-top: 0; }
+  .year-sub { text-align: center; color: var(--muted); font-size: 13.5px; margin-bottom: 40px; font-style: italic; font-family: var(--serif); font-size: 17px; }
+  .tl { position: relative; padding-left: 34px; }
+  .tl::before {
+    content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px;
+    width: 1px; background: linear-gradient(180deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
+  }
+  .item {
+    position: relative; margin-bottom: 34px;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .item.vis { opacity: 1; transform: none; }
+  .item::before {
+    content: ''; position: absolute; left: -30px; top: 9px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--bg); border: 1.5px solid var(--muted);
+    transition: background .3s, border-color .3s, box-shadow .3s;
+  }
+  .item.star::before { border-color: var(--gold); }
+  .item:hover::before {
+    background: var(--accent); border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(224,177,203,.6);
+  }
+  .item .date {
+    font-size: 12px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .item .date .badge { color: var(--gold); letter-spacing: 0; margin-left: 8px; }
+  .item a.card {
+    display: block; text-decoration: none; color: var(--ink);
+    padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px;
+    background: rgba(19,23,48,.45);
+    transition: border-color .3s, background .3s, transform .3s;
+  }
+  .item a.card:hover {
+    border-color: var(--accent); background: rgba(224,177,203,.06);
+    transform: translateX(6px);
+  }
+  .item .t {
+    font-family: var(--serif); font-size: 24px; font-weight: 500;
+    margin-bottom: 3px;
+  }
+  .item .s { color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .item .open-hint {
+    display: inline-block; margin-top: 8px; font-size: 12px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--accent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .item a.card:hover .open-hint { opacity: 1; }
+
+  .fin {
+    text-align: center; padding: 30px 24px 90px;
+    position: relative; z-index: 1;
+  }
+  .fin p {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(22px, 4vw, 32px); color: var(--muted);
+  }
+  .fin p b { color: var(--accent); font-weight: 500; }
+
+  /* ── viewer overlay ── */
+  .viewer {
+    position: fixed; inset: 0; z-index: 80;
+    background: #000;
+    display: none; flex-direction: column;
+  }
+  .viewer.show { display: flex; }
+  .viewer .bar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px;
+    background: #0b0e1a; border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .viewer .bar .vt {
+    font-family: var(--serif); font-size: 18px; flex: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .viewer .bar a, .viewer .bar button {
+    background: none; border: 1px solid var(--line); border-radius: 8px;
+    color: var(--ink); font-family: var(--sans); font-size: 12.5px;
+    padding: 6px 12px; cursor: pointer; text-decoration: none;
+    letter-spacing: .06em; transition: border-color .25s;
+    flex-shrink: 0;
+  }
+  .viewer .bar a:hover, .viewer .bar button:hover { border-color: var(--accent); }
+  .viewer iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="burger" id="burger" aria-label="меню">
+  <span></span><span></span><span></span>
+</div>
+<div class="scrim" id="scrim"></div>
+<nav class="drawer" id="drawer"></nav>
+
+<header class="hero">
+  <div class="pre">31 · 07 · 2023</div>
+  <h1>Наша <em>история</em></h1>
+  <div class="counter" id="counter">
+    <div class="cell"><div class="n" id="cd">—</div><div class="l">дней</div></div>
+    <div class="cell"><div class="n" id="ch">—</div><div class="l">часов</div></div>
+    <div class="cell"><div class="n" id="cm">—</div><div class="l">минут</div></div>
+    <div class="cell"><div class="n" id="cs">—</div><div class="l">секунд</div></div>
+  </div>
+  <div class="since">вместе с 31 июля 2023, 21:51</div>
+  <a class="down" href="#timeline">↓</a>
+</header>
+
+<main class="timeline" id="timeline"></main>
+
+<footer class="fin">
+  <p>…и это ещё <b>не конец</b>.</p>
+</footer>
+
+<div class="viewer" id="viewer">
+  <div class="bar">
+    <button id="vclose">← назад</button>
+    <div class="vt" id="vtitle"></div>
+    <a id="vext" href="#" target="_blank" rel="noopener">открыть отдельно ↗</a>
+  </div>
+  <iframe id="vframe" src="about:blank" allow="autoplay; fullscreen"></iframe>
+</div>
+
+<script>
+/* ── данные: 18 сайтов, отсортированы по дате ── */
+const SITES = [
+  { y: 2023, d: '31 июл', date: '2023-07-31', slug: 'i-love-you',    t: 'я люблю тебя',        s: '«Я люблю тебя» на пятидесяти языках. Самый первый — день, с которого всё началось.', star: true, badge: 'день первый' },
+  { y: 2023, d: '7 авг',  date: '2023-08-07', slug: 'i-love-u',      t: 'иди спать',           s: '«Сабина я тебя съем иди спать». Коротко и по делу.' },
+  { y: 2023, d: '8 авг',  date: '2023-08-08', slug: 'i-love-yu',     t: 'i love yu',           s: 'Вторая попытка за день. Настойчивость — это про любовь.' },
+  { y: 2023, d: '8 авг',  date: '2023-08-08', slug: 'love',          t: 'you must know that',  s: 'te amo · ich liebe dich · «It means i love you. I really do.»' },
+  { y: 2023, d: '14 авг', date: '2023-08-14', slug: 'iloveyou',      t: 'печатная машинка',    s: 'Признание, которое печатает само себя. Буква за буквой.' },
+  { y: 2023, d: '16 авг', date: '2023-08-16', slug: 'tapme',         t: 'touch me!',           s: 'Нажми — и посмотри, что будет.' },
+  { y: 2023, d: '24 авг', date: '2023-08-24', slug: 'mylove',        t: 'my love',             s: '«You must know that you are… And i love you.»' },
+  { y: 2023, d: '17 сен', date: '2023-09-17', slug: 'happy-birthday',t: 'первый день рождения', s: 'Поздравление на всех языках сразу — первый твой праздник вместе.', star: true, badge: '★ др' },
+  { y: 2023, d: '22 окт', date: '2023-10-22', slug: 'laptop',        t: 'laptop',              s: 'Просто «I love you». С ноутбука, с любовью.' },
+  { y: 2023, d: '1 ноя',  date: '2023-11-01', slug: 'maybe',         t: 'три месяца',          s: 'Первый счётчик времени вместе. «Люблю тебя солнышко, очень люблю».', star: true, badge: '★ 3 месяца' },
+  { y: 2024, d: '31 июл', date: '2024-07-31', slug: 'anniversary',   t: 'один год',            s: '«Hallo, Sabina». Счётчик дней на фоне заката — целый год позади.', star: true, badge: '★ 1 год' },
+  { y: 2024, d: '17 сен', date: '2024-09-17', slug: 'hbday',         t: 'emotion verses',      s: 'Второй день рождения: шестнадцать эмоций, и для каждой — свои строки.', star: true, badge: '★ др' },
+  { y: 2024, d: '31 дек', date: '2024-12-31', slug: 'happynewe',     t: 'our 2024 wrapped',    s: 'Фото-слайдшоу: весь наш год в картинках, под бой курантов.' },
+  { y: 2025, d: '31 янв', date: '2025-01-31', slug: '1-5y',          t: 'полтора года',        s: '«Totally in love since July 31, 2023, 21:51». С точностью до минуты.', star: true, badge: '★ 1.5 года' },
+  { y: 2025, d: '7 мар',  date: '2025-03-07', slug: 'emarch',        t: 'восьмое марта',       s: 'Открытка, звёзды, которые поздравляют, и стихотворение.' },
+  { y: 2025, d: '24 июл', date: '2025-07-24', slug: 'big2year-timer',t: 'два года · таймер',   s: '«Что-ж, ждём вместе». Обратный отсчёт до годовщины.', star: true, badge: '★ 2 года' },
+  { y: 2025, d: '30 июл', date: '2025-07-30', slug: 'platformer',    t: 'игра-платформер',     s: 'Настоящая игра к двум годам. WASD на компе, тапы на телефоне.' },
+  { y: 2026, d: '15 апр', date: '2026-04-15', slug: 'april15',       t: 'Козы Корпеш и Баян Сулу', s: 'Для Баян Сулу — от её Козы Корпеша. День влюблённых по-нашему.', star: true },
+  { y: 2026, d: '31 июл', date: '2026-07-31', slug: 'open-when',     t: 'открой, когда тебе…',  s: 'Двенадцать запечатанных конвертов на все случаи жизни. Открывать по одному, когда понадобится.', star: true, badge: '★ 3 года' },
+];
+const YEAR_SUB = {
+  2023: 'год, когда всё началось',
+  2024: 'первая годовщина',
+  2025: 'два года и одна игра',
+  2026: 'три года',
+};
+
+/* ── таймлайн ── */
+const tlRoot = document.getElementById('timeline');
+let curYear = null, tlHtml = '';
+for (const s of SITES) {
+  if (s.y !== curYear) {
+    if (curYear !== null) tlHtml += '</div>';
+    curYear = s.y;
+    tlHtml += `<div class="year">${s.y}</div><div class="year-sub">${YEAR_SUB[s.y]||''}</div><div class="tl">`;
+  }
+  tlHtml += `
+    <div class="item${s.star ? ' star' : ''}" data-date="${s.date}">
+      <div class="date">${s.d}${s.badge ? `<span class="badge">${s.badge}</span>` : ''}</div>
+      <a class="card" href="sites/${encodeURIComponent(s.slug)}/index.html" data-slug="${s.slug}" data-title="${s.t}">
+        <div class="t">${s.t}</div>
+        <div class="s">${s.s}</div>
+        <span class="open-hint">открыть →</span>
+      </a>
+    </div>`;
+}
+tlHtml += '</div>';
+tlRoot.innerHTML = tlHtml;
+
+/* ── бургер-меню по годам ── */
+const drawer = document.getElementById('drawer');
+let dHtml = '', dy = null;
+for (const s of SITES) {
+  if (s.y !== dy) { dy = s.y; dHtml += `<h3>${s.y}</h3>`; }
+  dHtml += `<a href="sites/${encodeURIComponent(s.slug)}/index.html" data-slug="${s.slug}" data-title="${s.t}"><span>${s.t}</span><span class="d">${s.d}</span></a>`;
+}
+drawer.innerHTML = dHtml;
+
+const burger = document.getElementById('burger');
+const scrim = document.getElementById('scrim');
+function toggleMenu(force) {
+  const open = force !== undefined ? force : !drawer.classList.contains('open');
+  drawer.classList.toggle('open', open);
+  burger.classList.toggle('open', open);
+  scrim.classList.toggle('show', open);
+}
+burger.addEventListener('click', () => toggleMenu());
+scrim.addEventListener('click', () => toggleMenu(false));
+
+/* ── viewer (iframe-оверлей) ── */
+const viewer = document.getElementById('viewer');
+const vframe = document.getElementById('vframe');
+const vtitle = document.getElementById('vtitle');
+const vext = document.getElementById('vext');
+function loadFrame(url) {
+  // location.replace, а не src: смена src засоряет историю браузера,
+  // и кнопка «назад» начинает листать iframe вместо закрытия оверлея
+  try { vframe.contentWindow.location.replace(url); }
+  catch (e) { vframe.src = url; }
+}
+function focusFrame() {
+  // и элемент, и contentWindow: в разных браузерах надёжно ловит фокус
+  // только одно из двух, особенно после programmatic-навигации в iframe
+  try { vframe.focus(); } catch (e) {}
+  try { vframe.contentWindow.focus(); } catch (e) {}
+}
+// некоторые сайты сами уводят iframe на другую страницу внутри sites/
+// (например platformer в конце перекидывает на big2year-timer) —
+// шапка оверлея должна подхватывать это, а не показывать старый тайтл
+function syncFrameChrome() {
+  let path;
+  try { path = vframe.contentWindow.location.pathname; } catch (e) { return; }
+  const m = path.match(/\/sites\/([^/]+)\//);
+  if (!m) return;
+  const site = SITES.find(s => s.slug === m[1]);
+  if (site) {
+    vtitle.textContent = site.t;
+    vext.href = `sites/${encodeURIComponent(site.slug)}/index.html`;
+  }
+}
+vframe.addEventListener('load', () => {
+  if (!viewer.classList.contains('show')) return; // не трогаем фокус на исходном about:blank
+  focusFrame();
+  syncFrameChrome();
+  try {
+    // Escape должен работать и когда фокус внутри iframe (same-origin)
+    vframe.contentDocument.addEventListener('keydown', e => { if (e.key === 'Escape') closeSite(); });
+  } catch (e) {}
+});
+function openSite(url, title) {
+  loadFrame(url);
+  vtitle.textContent = title;
+  vext.href = url;
+  viewer.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  toggleMenu(false);
+  history.pushState({ site: url }, '');
+  focusFrame(); // сразу, пока ещё держим жест пользователя от клика
+}
+function closeSite(fromPop) {
+  if (!viewer.classList.contains('show')) return;
+  viewer.classList.remove('show');
+  loadFrame('about:blank');
+  document.body.style.overflow = '';
+  if (!fromPop && history.state && history.state.site) history.back();
+}
+window.addEventListener('popstate', () => closeSite(true));
+document.getElementById('vclose').addEventListener('click', () => closeSite());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSite(); toggleMenu(false); } });
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-slug]');
+  if (!a) return;
+  e.preventDefault();
+  openSite(a.getAttribute('href'), a.dataset.title);
+});
+
+/* ── живой счётчик ── */
+const T0 = new Date(2023, 6, 31, 21, 51, 0);
+function tick() {
+  let ms = Date.now() - T0.getTime();
+  if (ms < 0) ms = 0;
+  const sec = Math.floor(ms / 1000);
+  document.getElementById('cd').textContent = Math.floor(sec / 86400);
+  document.getElementById('ch').textContent = Math.floor(sec / 3600) % 24;
+  document.getElementById('cm').textContent = Math.floor(sec / 60) % 60;
+  document.getElementById('cs').textContent = sec % 60;
+}
+tick(); setInterval(tick, 1000);
+
+/* ── появление карточек при скролле ── */
+const io = new IntersectionObserver(es => {
+  for (const en of es) if (en.isIntersecting) { en.target.classList.add('vis'); io.unobserve(en.target); }
+}, { threshold: 0.12 });
+document.querySelectorAll('.item').forEach(el => io.observe(el));
+
+/* ── звёзды ── */
+const cv = document.getElementById('stars'), cx = cv.getContext('2d');
+let stars = [];
+function resize() {
+  cv.width = innerWidth * devicePixelRatio;
+  cv.height = innerHeight * devicePixelRatio;
+  cx.scale(devicePixelRatio, devicePixelRatio);
+  stars = Array.from({ length: Math.min(160, innerWidth / 6) }, () => ({
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    r: Math.random() * 1.3 + .3,
+    p: Math.random() * Math.PI * 2,
+    v: .008 + Math.random() * .02,
+  }));
+}
+resize(); addEventListener('resize', resize);
+(function loop() {
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  for (const s of stars) {
+    s.p += s.v;
+    const a = .25 + .55 * (Math.sin(s.p) * .5 + .5);
+    cx.beginPath();
+    cx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    cx.fillStyle = `rgba(232,230,240,${a})`;
+    cx.fill();
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
