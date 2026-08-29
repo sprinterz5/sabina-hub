@@ -1,0 +1,208 @@
+:root {
+  --bg: #0b0e1a;
+  --card: rgba(19, 23, 48, .5);
+  --ink: #e8e6f0;
+  --muted: #8b8aa3;
+  --line: #2a2f52;
+  --accent: #e0b1cb;
+  --gold: #d4af6a;
+  --ok: #7fd1a8;
+  --no: #d98b8b;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Jost', 'Segoe UI', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(60vw 50vh at 20% 0%, rgba(224,177,203,.08), transparent 70%),
+    radial-gradient(50vw 50vh at 85% 100%, rgba(212,175,106,.07), transparent 70%);
+}
+#stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 46px 20px 80px;
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: safe center;
+}
+.screen { display: none; animation: in .5s ease both; }
+.screen.on { display: block; }
+@keyframes in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.pre {
+  letter-spacing: .45em; text-transform: uppercase;
+  font-size: 11px; color: var(--muted); margin-bottom: 18px; text-align: center;
+}
+h1 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(34px, 8vw, 58px); line-height: 1.08;
+  text-align: center; margin-bottom: 22px;
+}
+h1 em { font-style: italic; color: var(--accent); }
+.lead {
+  text-align: center; color: var(--muted);
+  font-size: 15.5px; line-height: 1.7; max-width: 420px; margin: 0 auto;
+}
+.lead b { color: var(--ink); font-weight: 400; }
+
+button {
+  font-family: var(--sans); font-weight: 300; font-size: 15px;
+  color: var(--ink); background: none; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 12px;
+  transition: border-color .25s, background .25s, transform .2s, color .25s;
+}
+.big {
+  display: block; margin: 34px auto 0; padding: 14px 38px;
+  letter-spacing: .22em; text-transform: uppercase; font-size: 12.5px;
+  border-color: var(--accent); color: var(--accent);
+}
+.big:hover { background: rgba(224,177,203,.1); }
+.ghost {
+  display: block; margin: 26px auto 0; padding: 10px 22px;
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
+}
+.ghost:hover { color: var(--ink); border-color: var(--muted); }
+
+/* ── квиз ── */
+.meter {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 30px;
+}
+.meter .num {
+  font-family: var(--serif); font-size: 15px; color: var(--muted);
+  letter-spacing: .1em; flex-shrink: 0; font-variant-numeric: tabular-nums;
+}
+.meter .bar { flex: 1; height: 1px; background: var(--line); position: relative; }
+.meter .bar i {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: var(--accent); transition: width .45s cubic-bezier(.22,1,.36,1);
+}
+.meter .score { font-size: 13px; color: var(--gold); flex-shrink: 0; }
+
+.q {
+  font-family: var(--serif); font-size: clamp(24px, 5.5vw, 34px);
+  font-weight: 500; line-height: 1.25; margin-bottom: 26px;
+}
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  text-align: left; padding: 15px 18px; font-size: 15.5px;
+  background: var(--card); line-height: 1.4;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); transform: translateX(5px); }
+.opt:disabled { cursor: default; opacity: .5; }
+.opt.right { border-color: var(--ok); color: var(--ok); opacity: 1; background: rgba(127,209,168,.08); }
+.opt.wrong { border-color: var(--no); color: var(--no); opacity: 1; background: rgba(217,139,139,.08); }
+
+.note {
+  margin-top: 22px; padding: 16px 18px;
+  border-left: 1px solid var(--gold); background: rgba(212,175,106,.05);
+  font-family: var(--serif); font-style: italic; font-size: 18px;
+  color: var(--muted); line-height: 1.5;
+  display: none;
+}
+.note.on { display: block; animation: in .4s ease both; }
+.next { margin: 22px 0 0 auto; padding: 11px 26px; font-size: 12.5px;
+  letter-spacing: .2em; text-transform: uppercase; display: none; }
+.next.on { display: block; }
+.next:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── результат ── */
+.score-big {
+  font-family: var(--serif); font-size: clamp(72px, 20vw, 130px);
+  font-weight: 500; line-height: 1; text-align: center; color: var(--gold);
+}
+.score-big b { font-weight: 500; color: var(--gold); }
+.score-big span { font-size: .38em; color: var(--muted); }
+.verdict {
+  font-family: var(--serif); font-size: clamp(26px, 6vw, 38px);
+  text-align: center; margin: 18px 0 10px; color: var(--accent);
+}
+
+/* ── книжка талонов ── */
+.book-head { text-align: center; margin-bottom: 34px; }
+.book-head h2 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(28px, 6.5vw, 42px); margin-bottom: 10px;
+}
+.book-head p { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+.book-head p b { color: var(--gold); font-weight: 400; }
+
+.coupon {
+  position: relative;
+  display: flex; align-items: stretch; gap: 0;
+  border: 1px dashed var(--line); border-radius: 14px;
+  background: var(--card);
+  margin-bottom: 14px; overflow: hidden;
+  transition: border-color .3s, opacity .4s;
+}
+.coupon .stub {
+  flex-shrink: 0; width: 62px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 14px 0;
+  border-right: 1px dashed var(--line);
+  background: rgba(0,0,0,.18);
+}
+.coupon .stub .ic { font-size: 22px; line-height: 1; filter: saturate(.9); }
+.coupon .stub .n {
+  font-family: var(--serif); font-size: 12px; color: var(--muted);
+  letter-spacing: .08em;
+}
+.coupon .body { flex: 1; padding: 15px 18px; min-width: 0; }
+.coupon .t {
+  font-family: var(--serif); font-size: 21px; font-weight: 500;
+  margin-bottom: 3px; line-height: 1.2;
+}
+.coupon .s { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.coupon .use {
+  margin-top: 11px; padding: 7px 16px; font-size: 11px;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--gold);
+  border-color: rgba(212,175,106,.4);
+}
+.coupon .use:hover { background: rgba(212,175,106,.1); border-color: var(--gold); }
+
+.coupon.open { border-color: rgba(212,175,106,.45); }
+.coupon.locked .t, .coupon.locked .s { filter: blur(4px); user-select: none; }
+.coupon.locked .stub .ic { opacity: .35; }
+.coupon.locked { opacity: .6; }
+.coupon.locked::after {
+  content: '🔒 закрыт'; position: absolute; right: 16px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted);
+}
+.coupon.used { opacity: .45; border-style: solid; }
+.coupon.used .t { text-decoration: line-through; text-decoration-color: var(--muted); }
+.stamp {
+  display: inline-block; margin-top: 11px;
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--no); border: 1px solid var(--no); border-radius: 6px;
+  padding: 5px 12px; transform: rotate(-3deg);
+}
+
+.tip {
+  text-align: center; color: var(--muted); font-size: 12.5px;
+  margin-top: 26px; line-height: 1.6; font-style: italic; font-family: var(--serif);
+  font-size: 16px;
+}
+
+@media (max-width: 420px) {
+  .wrap { padding: 34px 16px 60px; }
+  .coupon .stub { width: 50px; }
+  .coupon .body { padding: 13px 14px; }
+  .coupon.locked::after { display: none; }
+}
+
+[hidden] { display: none !important; }
